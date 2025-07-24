@@ -84,7 +84,7 @@ const App = () => {
             setSize((size: any) => {
                 const windowSize = document.documentElement.clientWidth;
                 if (layout !== 'preview') {
-                    const min = 340;
+                    const min = 480;
                     const max = windowSize - min;
                     const current = layout === 'editor' ? windowSize : min;
                     return {
