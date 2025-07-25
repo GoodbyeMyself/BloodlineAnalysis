@@ -159,42 +159,104 @@ G6.registerNode('dice-er-box', {
     setState(name, value, item: any) {
         // 字段高亮
         if (name && name.startsWith('highlight')) {
-            const anchor = name.split('-')[1];
+            try {
+                const anchor = name.split('-')[1];
 
-            const shape = item.get('keyShape');
-            // 查找 label 下标
-            const anchorIndex = item
-                .getModel()
-                .attrs.findIndex((e: any) => e.key === anchor);
-            // 查找 label 元素，通过下标来找
-            const label = shape.get('parent').get('children')[3].get('children')[
-                anchorIndex * 2 + 1
-            ];
+                const shape = item.get('keyShape');
+                if (!shape) {
+                    console.warn('无法获取keyShape');
+                    return;
+                }
 
-            if (value) {
-                //label.attr('fill', '#A3B1BF');
-                //label.attr('fill', 'red');
-                label.attr('fontWeight', 800);
-            } else {
-                //label.attr('fill', '#A3B1BF');
-                //label.attr('fill', 'red');
-                label.attr('fontWeight', 500);
+                // 查找 label 下标
+                const anchorIndex = item
+                    .getModel()
+                    .attrs.findIndex((e: any) => e.key === anchor);
+                
+                if (anchorIndex === -1) {
+                    console.warn(`未找到anchor: ${anchor}`);
+                    return;
+                }
+
+                // 查找 label 元素，通过下标来找
+                const parent = shape.get('parent');
+                if (!parent) {
+                    console.warn('无法获取parent');
+                    return;
+                }
+
+                const children = parent.get('children');
+                if (!children || !children[3]) {
+                    console.warn('无法获取children或children[3]');
+                    return;
+                }
+
+                const listContainer = children[3];
+                const listChildren = listContainer.get('children');
+                if (!listChildren) {
+                    console.warn('无法获取listContainer的children');
+                    return;
+                }
+
+                const label = listChildren[anchorIndex * 2 + 1];
+                if (!label) {
+                    console.warn(`无法获取label，index: ${anchorIndex * 2 + 1}`);
+                    return;
+                }
+
+                if (value) {
+                    //label.attr('fill', '#A3B1BF');
+                    //label.attr('fill', 'red');
+                    label.attr('fontWeight', 800);
+                } else {
+                    //label.attr('fill', '#A3B1BF');
+                    //label.attr('fill', 'red');
+                    label.attr('fontWeight', 500);
+                }
+            } catch (error) {
+                console.error('字段高亮处理出错:', error);
             }
         }
 
         // 表名称高亮
         if (name && name.startsWith('tableHighlight')) {
-            const shape = item.get('keyShape');
-            // shape.get('parent').get('children')[1] 表示拿到 text
-            const label = shape.get('parent').get('children')[1];
-            if (value) {
-                //label.attr('fill', '#A3B1BF');
-                //label.attr('fill', 'red');
-                label.attr('fontWeight', 800);
-            } else {
-                //label.attr('fill', '#A3B1BF');
-                //label.attr('fill', 'red');
-                label.attr('fontWeight', 500);
+            try {
+                const shape = item.get('keyShape');
+                if (!shape) {
+                    console.warn('无法获取keyShape');
+                    return;
+                }
+
+                const parent = shape.get('parent');
+                if (!parent) {
+                    console.warn('无法获取parent');
+                    return;
+                }
+
+                const children = parent.get('children');
+                if (!children || !children[1]) {
+                    console.warn('无法获取children或children[1]');
+                    return;
+                }
+
+                // shape.get('parent').get('children')[1] 表示拿到 text
+                const label = children[1];
+                if (!label) {
+                    console.warn('无法获取label');
+                    return;
+                }
+
+                if (value) {
+                    //label.attr('fill', '#A3B1BF');
+                    //label.attr('fill', 'red');
+                    label.attr('fontWeight', 800);
+                } else {
+                    //label.attr('fill', '#A3B1BF');
+                    //label.attr('fill', 'red');
+                    label.attr('fontWeight', 500);
+                }
+            } catch (error) {
+                console.error('表名称高亮处理出错:', error);
             }
         }
     },
@@ -285,21 +347,30 @@ G6.registerEdge('dice-er-edge', {
      * @param item 要改变状态的边
      */
     setState(name, value, item: any) {
-        const shape = item.get('keyShape');
-        // 字段连线高亮或表连线高亮
-        if (name && name.startsWith('highlight')) {
-            const highlightColor = name.split('-')[1];
-            if (value) {
-                //shape.attr('opacity', 0.2);
-
-                shape.attr('stroke', highlightColor);
-                shape.attr('lineWidth', 3);
-            } else {
-                //shape.attr('opacity', 1);
-
-                shape.attr('stroke', '#6C6B6B');
-                shape.attr('lineWidth', 2);
+        try {
+            const shape = item.get('keyShape');
+            if (!shape) {
+                console.warn('无法获取边的keyShape');
+                return;
             }
+
+            // 字段连线高亮或表连线高亮
+            if (name && name.startsWith('highlight')) {
+                const highlightColor = name.split('-')[1];
+                if (value) {
+                    //shape.attr('opacity', 0.2);
+
+                    shape.attr('stroke', highlightColor);
+                    shape.attr('lineWidth', 3);
+                } else {
+                    //shape.attr('opacity', 1);
+
+                    shape.attr('stroke', '#6C6B6B');
+                    shape.attr('lineWidth', 2);
+                }
+            }
+        } catch (error) {
+            console.error('边状态设置出错:', error);
         }
     },
 });
