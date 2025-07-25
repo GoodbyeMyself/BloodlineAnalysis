@@ -21,7 +21,7 @@ const colorMap: any = {
 };
 
 const handleLabelLength = (label: string) => {
-    return label && label.length > 26 ? label.slice(0, 26) + '...' : label;
+    return label && label.length > 20 ? label.slice(0, 20) + '...' : label;
 };
 
 G6.registerNode('dice-er-box', {
