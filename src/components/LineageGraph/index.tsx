@@ -324,6 +324,30 @@ const LineageGraph = ({
         graphRef.current.fitView();
     };
 
+    // 获取画布真实数据并导出到控制台
+    const handleExportJSON = () => {
+        if (!graphRef.current) {
+            console.log('画布未初始化');
+            return;
+        }
+
+        const graph = graphRef.current;
+        const graphData = graph.save();
+        
+        // 获取当前的血缘数据状态
+        const currentData = {
+            nodes: graphData.nodes,
+            edges: graphData.edges,
+            timestamp: new Date().toISOString(),
+            layout: layout,
+            fieldLineage: fieldCheckedRef.current,
+            wholeLineage: wholeCheckedRef.current,
+            lineageData: lineageData
+        };
+        
+        console.log('画布关系JSON数据:', currentData);
+    };
+
     useEffect(() => {
         if (!graphRef.current) {
             // 实例化 Minimap
@@ -425,6 +449,7 @@ const LineageGraph = ({
                         handleDownloadImage={() => handleDownloadImage(graphRef.current)}
                         handleEnterFullscreen={() => handleEnterFullscreen(ref.current)}
                         handleExitFullscreen={() => handleExitFullscreen()}
+                        handleExportJSON={handleExportJSON}
                     />
                 </div>
             </div>
