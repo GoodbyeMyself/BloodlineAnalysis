@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Toolbar from './components/Toolbar';
 import Topbar from './components/Topbar';
+import TableDetailModal from './components/TableDetailModal';
 import G6 from '@antv/g6';
 import './index.css';
 import './registerShape';
@@ -73,6 +74,8 @@ const LineageGraph = ({
     const currentHighlightColorRef = useRef<any>(highlightColor);
     const [lineageWholeData, setLineageWholeData] = useState<any>();
     const [lineagePartData, setLineagePartData] = useState<any>();
+    const [modalVisible, setModalVisible] = useState(false);
+    const [currentTableData, setCurrentTableData] = useState<any>(null);
 
     useEffect(() => {
         fieldCheckedRef.current = true;
@@ -283,6 +286,14 @@ const LineageGraph = ({
             const currentAnchor = target.get('name');
             if (!currentAnchor) return;
 
+            // 检查是否点击的是详情按钮
+            if (currentAnchor === 'detail-btn' || currentAnchor === 'detail-btn-text') {
+                const model = item.getModel();
+                setCurrentTableData(model);
+                setModalVisible(true);
+                return;
+            }
+
             if (fieldCheckedRef.current) {
                 handleNodeClick(graph, item, currentAnchor, 'highlight');
             } else {
@@ -417,6 +428,11 @@ const LineageGraph = ({
                     />
                 </div>
             </div>
+            <TableDetailModal
+                visible={modalVisible}
+                onCancel={() => setModalVisible(false)}
+                tableData={currentTableData}
+            />
         </div>
     );
 };

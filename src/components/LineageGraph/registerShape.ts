@@ -21,7 +21,7 @@ const colorMap: any = {
 };
 
 const handleLabelLength = (label: string) => {
-    return (label && label.length) > 26 ? label.slice(0, 26) + '...' : label;
+    return label && label.length > 26 ? label.slice(0, 26) + '...' : label;
 };
 
 G6.registerNode('dice-er-box', {
@@ -62,6 +62,38 @@ G6.registerNode('dice-er-box', {
             },
             draggable: true,
             name: cfg.label,
+        });
+
+        // 详情按钮
+        group.addShape('rect', {
+            attrs: {
+                x: nodeWidth - 60,
+                y: 6,
+                width: 48,
+                height: 30,
+                fill: '#ffffff',
+                stroke: '#ffffff',
+                radius: 4,
+                cursor: 'pointer',
+            },
+            draggable: true,
+            name: 'detail-btn',
+        });
+
+        // 详情按钮文本
+        group.addShape('text', {
+            attrs: {
+                x: nodeWidth - 36,
+                y: 28, // 调整Y轴位置，让文字在按钮内居中
+                fill: '#096DD9',
+                text: '详情',
+                fontSize: 12,
+                fontWeight: 500,
+                cursor: 'pointer',
+                textAlign: 'center',
+            },
+            draggable: true,
+            name: 'detail-btn-text',
         });
 
         // 边框
